@@ -87,12 +87,28 @@ links = get_links()
 data = []
 for i in tqdm(links):
     d = get_personagens_infos(i)
-    d['link'] = i
+    d['Link'] = i
+    nome = i.strip("/").split("/")[-1].replace('-', ' ').title()
+    d['Nome'] = nome
     data.append(d)
 
 # %%
 df = pd.DataFrame(data)
 df
 # %%
+# Utilizei este código, para achar o link do personagem
+# Que estava dando erro, utilizando o isna para pesquisar os nulos
+# e depois ~ na frente do filtro da posição para negar a consulta e achar
+# o valor diferente.
+df[~df['de nascimento'].isna()]
+# %%
 
+#Escolhemos utilizar o parquet como arquivo de dados, por ser um arquivo binário, diferente 
+# do csv que é tipo text estava quebrando os dados.
+df.to_parquet("dados_re.parquet", index=False)
+# %%
+df_new = pd.read_parquet("dados_re.parquet")
+df_new
+# %%
+df.to_pickle("dados_re.pkl")
 # %%
